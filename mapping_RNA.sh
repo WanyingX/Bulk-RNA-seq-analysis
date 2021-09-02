@@ -5,19 +5,22 @@
 # Download the data before use it from GEO by using command example:
 # fastq-dump --split-files SRR5339940
 
-fq1=$1
+ref=${PATH OF REFERENCE INDEX}
+software=${PATH OF SOFTWARE}
+genome=$1
+fq=$2
 
 # Give output file a prefix
 
-name=$2
+name=$3
 
 # Here is index of reference genome which is used to do mapping
 
-index = ${HISAT2 mapping index}
+index = $ref/${genome}
 
 # Step2 : Start mapping your fastq file (raw read)
 
-hisat2 -x $index -p 7 --sp 1000,1000 -1 $fq1 -2 $fq2  | samtools view -bS - > $name.bam
+hisat2 -x $index -p 7 --sp 1000,1000 -1 ${fq}_1.fastq -2 ${fq}_2.fastq  | samtools view -bS - > $name.bam
 
 # Step3: Sort bam file by using coordinate before we remove PCR duplication.
 
@@ -25,14 +28,14 @@ samtools sort -@ 12 $name.bam > $name.sorted.bam
 
 # Step4: Remove PCR duplication by using picard
 
-java -jar -Xmx4g picard-tools/MarkDuplicates.jar \
+java -jar -Xmx4g $software/picard-tools/MarkDuplicates.jar \
       I=$name.sorted.bam \
       O=${name}.dedup.bam \
       M=marked_dup_metrics.txt
 
 # Step5: Annotate your non-duplicated reads into transcription by featureCounts.
 
-gtf=hg19.refFlat.gtf
+gtf=$ref/${genome}.refFlat.gtf
 
 featureCounts --ignoreDup -p -B -a $gtf -t exon -g gene_id -o counts.txt ${name}.dedup.bam
 

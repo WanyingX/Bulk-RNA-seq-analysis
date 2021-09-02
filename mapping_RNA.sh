@@ -2,7 +2,7 @@
 
 # Step1: Input the prefix of your .fastq file
 # For example: SRR5339940
-# Download the data before use it from GEO by using command:
+# Download the data before use it from GEO by using command example:
 # fastq-dump --split-files SRR5339940
 
 fq1=$1

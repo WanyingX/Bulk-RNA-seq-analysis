@@ -16,7 +16,7 @@ name=$3
 
 # Here is index of reference genome which is used to do mapping
 
-index = $ref/${genome}
+index=$ref/${genome}
 
 # Step2 : Start mapping your fastq file (raw read)
 

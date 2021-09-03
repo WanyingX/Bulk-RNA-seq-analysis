@@ -22,9 +22,9 @@ index=$ref/${genome}
 
 hisat2 -x $index -p 7 --sp 1000,1000 -1 ${fq}_1.fastq -2 ${fq}_2.fastq  | samtools view -bS - > $name.bam
 
-# Step3: Sort bam file by using coordinate before we remove PCR duplication.
+# Step3: Keep uniquely mapped reads and then sort them by using coordinate before we remove PCR duplication.
 
-samtools sort -@ 12 $name.bam > $name.sorted.bam
+samtools view -F 1804 -b $name.bam | samtools sort -@ 12 - > $name.sorted.bam
 
 # Step4: Remove PCR duplication by using picard
 

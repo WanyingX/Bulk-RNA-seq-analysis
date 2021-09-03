@@ -20,11 +20,15 @@ index=$ref/${genome}
 
 # Step2 : Start mapping your fastq file (raw read)
 
+echo Total read `cat ${fq}_1.fastq | grep ^@ | wc -l` >> summary
+
 hisat2 -x $index -p 7 --sp 1000,1000 -1 ${fq}_1.fastq -2 ${fq}_2.fastq  | samtools view -bS - > $name.bam
 
 # Step3: Keep uniquely mapped reads and then sort them by using coordinate before we remove PCR duplication.
 
 samtools view -F 1804 -b $name.bam | samtools sort -@ 12 - > $name.sorted.bam
+
+echo Uniquely mapped reads `samtools view -c $name.sorted.bam` >> summary
 
 # Step4: Remove PCR duplication by using picard
 
@@ -33,6 +37,7 @@ java -jar -Xmx4g $software/picard-tools/MarkDuplicates.jar \
       O=${name}.dedup.bam \
       M=marked_dup_metrics.txt
 
+echo Non-redundant mapped reads `samtools view -c ` >> summary
 # Step5: Annotate your non-duplicated reads into transcription by featureCounts.
 
 gtf=$ref/${genome}.refFlat.gtf

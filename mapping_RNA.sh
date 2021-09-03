@@ -45,6 +45,7 @@ gtf=$ref/${genome}.refFlat.gtf
 featureCounts --ignoreDup -p -B -a $gtf -t exon -g gene_id -o counts.txt ${name}.dedup.bam
 
 cut -f1,7 counts.txt > $name.count.bed
+rm $name.bam $name.sorted.bam
 
 wait
 exit;

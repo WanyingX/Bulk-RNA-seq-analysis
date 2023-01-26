@@ -14,9 +14,11 @@
     make -f Makefile.FreeBSD
   To build it on a Oracle Solaris or OpenSolaris computer, issue the following command:
     make -f Makefile.SunOS
-3. picard (Includes in .zip file
+3. Picard
+  https://broadinstitute.github.io/picard/
+  A tool to help remove PCR duplication
 
-# Reference index 
+# Reference index
   Download zip file:
     hisat2 reference index
       mm10.*.ht2
@@ -27,4 +29,5 @@
 # Run RNAseq.sh
   RNAseq.sh {genome} {prefix of fastq file} {prefix of output file}
 # The output of this script
-1. *.dedup.bam: mapped reads removes PCR duplication
+1. *.dedup.bam: Uniquely mapped reads after removing PCR duplication.
+2. *count.bed: Annotated gene expression table for a given sample. 

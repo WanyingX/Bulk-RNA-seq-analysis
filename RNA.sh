@@ -33,11 +33,12 @@ echo Uniquely mapped reads `samtools view -c $name.sorted.bam` >> summary
 #------------Step3: remove PCR duplication---------------------
 
 java -jar -Xmx4g $software/picard-tools/MarkDuplicates.jar \
+      REMOVE_DUPLICATES=true \
       I=$name.sorted.bam \
       O=${name}.dedup.bam \
       M=marked_dup_metrics.txt
 
-echo Non-redundant mapped reads `samtools view -c ` >> summary
+echo Non-duplicated mapped reads `samtools view -c ${name}.dedup.bam` >> summary
 #-------Step4: Annotate genes by using reads--------------------
 
 gtf=$ref/${genome}.refFlat.gtf
@@ -50,6 +51,8 @@ rm $name.bam $name.sorted.bam
 #!/bin/bash
 #---------Generate genomic track of your RNA-seq data------------
 
+# There's no need to create bedgraph or bigwig file. We could directly upload *.dedup.bam file onto UCSC track to
+# visualized read for each gene exon and intron
 chrom_size=$ref/$genome.chrom.sizes
 $software/genomeCoverageBed -bg -ibam ${name}.dedup.bam -g $chrom_size > $name.bedgraph
 
